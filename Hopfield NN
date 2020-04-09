@@ -1,0 +1,407 @@
+import time
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+start=time.time()
+
+def matrix_man4(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            if j==5 or (j==4 and i==1) or (j==3 and i==2) or (i==L-1 and (j==3 or j==4 or j==6 or j==7)):
+                linha.append(1)
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+   
+   
+    return matrizA
+
+def matrix_man5(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            if (j==4 and i==0) or ((j==2 or j==3 or j==4 or j==5 or j==6) and i==1) or (i==2 and (j==1 or j==2 or j==6 or j==7)) or (i==3 and (j==7 or j==8)) or (i==4 and (j==6 or j==7)):
+                linha.append(1)
+            elif (i==5 and (j==5 or j==6))or(i==6 and (j==4 or j==5))or(i==7 and (j==3 or j==4))or(i==8 and (j==2 or j==3)):
+                linha.append(1)
+            elif ((j==1 or j==2 or j==3 or j==4 or j==5 or j==6 or j==7 or j==8 )and i==9):
+                linha.append(1)
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+   
+   
+    return matrizA
+
+def matrix_man6(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            if (i==0 and (j==3 or j==4 or j==5)) or (i==1 and (j==2 or j==3 or j==4 or j==5)) or (i==2 and (j==2 or j==5 or j==6)) or (i==3 and (j==5 or j==6)):
+                linha.append(1)
+            elif (i==4 and (j==3 or j==4 or j==5)) or (i==5 and (j==3 or j==4 or j==5)) or (i==6 and (j==5 or j==6)) or (i==7 and (j==2 or j==5 or j==6)):
+                linha.append(1)
+            elif (i==8 and (j==2 or j==3 or j==4 or j==5)) or (i==9 and (j==3 or j==4 or j==5)):
+                linha.append(1)
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+   
+   
+    return matrizA
+
+def matrix_man7(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+           
+            if (i==4 and (j==3 or j==4 or j==5)) or (i==5 and (j==3 or j==4 or j==5)) or (i==6 and (j==5 or j==6)) or (i==7 and (j==2 or j==5 or j==6)):
+                linha.append(1)
+            elif (i==8 and (j==2 or j==3 or j==4 or j==5)) or (i==9 and (j==3 or j==4 or j==5)):
+                linha.append(1)
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+   
+   
+    return matrizA
+
+def matrix_man1(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            if j>5 or j==5:
+                linha.append(1)
+           
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+    return matrizA
+
+def matrix_man2(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            if j<5:
+                linha.append(1)
+            else:
+                linha.append(-1)
+        matrizA.append(linha)
+    return matrizA
+
+def matrix_man3(L):
+    matrizA = []
+    for i in range (L):
+        linha=[]
+        for j in range (L):
+            linha.append(-1)
+        matrizA.append(linha)
+    return matrizA
+
+def print_matrix(matrix):
+    lin=len(matrix)
+    col=len(matrix[0])
+    for i in range (lin):
+        for j in range (col):
+            print("%3s"%matrix[i][j],end=" ")
+        print()
+
+def energy(matrix_i,matrix_tot,LP):
+    L=len(matrix_i)
+    m=0
+    for i in range (LP):
+        matrix_1=matrix_tot[i]
+        m+=overlap(matrix_i,matrix_1)**2
+    E=-1/2*m*L**2
+    
+    return E
+
+
+
+def lista_rand(N):
+    lista=numpy.zeros(N,dtype=int)
+    for i in range (lin):
+        linha=[]
+        for j in range (col):
+            r=random.randint(0,1)
+            if r==0:
+                r-=1
+            linha.append(r)
+    
+    
+    
+def matrix_rand(lin, col):
+    matrizA=numpy.zeros((lin,col),dtype=int)
+    for i in range (lin):
+        for j in range (col):
+            r=random.randint(0,1)
+            if r==0:
+                r-=1
+            matrizA[i][j]+=r
+    return matrizA
+
+def rerename_spins(elemento,matrix):
+    L=len(matrix)
+    if elemento!=0:
+        i=elemento//L
+        j=elemento-(i*L)
+    else:
+        i=0
+        j=0
+    return i,j
+
+def rename_spins(i,j,matrix):
+    L=len(matrix)
+    elemento=i*L+j
+    return elemento
+
+
+def efficacy(matrix_tot,matrix_i,LP,N):
+    J=numpy.zeros((N,N),dtype=float)
+    print('.')
+    for i in range (N):
+        for j in range (i,N):
+            up,ip=rerename_spins(i,matrix_i)
+            ap,ep=rerename_spins(j,matrix_i)
+            for k in range (LP):
+                J[i][j]+=(matrix_tot[k][up][ip]*matrix_tot[k][ap][ep])
+            J[i][j]=J[i][j]/N
+    for i in range (1,N):
+        for j in range (i):
+            J[i][j]=J[j][i]
+    for i in range (N):
+        J[i][i]=0
+    return J
+
+def add_patterns(matrix_tot,matrix_i,J,popi,LP,u):
+    N=len(J)
+    if popi==0 or u==0:
+        return J
+    print(u*popi)
+    for i in range (u*popi):
+        matrix_1=matrix_rand(L,L)
+        matrix_tot.append(matrix_1)
+    for i in range (N):
+        for j in range (i,N):
+            up,ip=rerename_spins(i,matrix_i)
+            ap,ep=rerename_spins(j,matrix_i)
+            for k in range ((u-1)*popi,u*popi):
+                J[i][j]+=(matrix_tot[LP+k][up][ip]*matrix_tot[LP+k][ap][ep])
+    for i in range (1,N):
+        for j in range (i):
+            J[i][j]=J[j][i]
+    for i in range (N):
+        J[i][i]=0
+    return J
+    
+
+
+def determine(a,n,T,L,LP,MS,SP,q,D,M,eps):
+    m=0
+    k=14
+    ni=n
+    n=n*L**2
+    FI=[]
+    matrix_tot=[]
+    m_vector=[]
+    delta_e=0
+    t=[]
+    J=[]
+    N=L**2
+    for i in range (LP):
+        if i!=0:
+            matrix_1=matrix_rand(L,L)
+            matrix_tot.append(matrix_1)
+        else:
+            matrix_1=matrix_man4(L)
+            matrix_tot.append(matrix_1)
+    print(len(matrix_tot))
+    matrix_i=matrix_man4(L)
+    for u in range (a):
+        i=random.randint(0,L-1)
+        j=random.randint(0,L-1)
+        matrix_i[i][j]=-matrix_i[i][j]
+    J=efficacy(matrix_tot,matrix_i,LP,N)
+    print(J)
+    Ji=J
+    print(J[0][0])
+    for k in range (M):
+        for i in range (N):
+            for j in range (i,N):
+                for k in range (N):
+                    J[i][j]-=(eps*J[i][k]*J[k][j])/N
+
+        for i in range (1,N):
+            for j in range (i):
+                J[i][j]=J[j][i]
+        for k in range (N):
+            J[k][k]=0
+    print('.')
+    E=0
+    flips=0
+    x=[]
+    listamf=numpy.zeros(n,dtype=float)
+    listaM1=[]
+    listapt=[]
+    print_matrix_simbolically(matrix_i)
+    for u in range (SP):
+        if q==1:
+            matrix_i=matrix_man4(L)
+        J=add_patterns(matrix_tot,matrix_i,J,popi,LP,u)
+        M1tot=0
+        listapt.append(LP+u*popi)
+        for t in range (MS):
+            flips=0
+            while flips<=n:
+                op=random.randint(0,N-1)
+                l,k=rerename_spins(op,matrix_i)
+                h=0
+                for i in range (N):
+                    up,ap=rerename_spins(i,matrix_i)
+                    h+=J[op][i]*matrix_i[up][ap]
+                p=random.uniform(0,1)
+                if p>(1+numpy.tanh(h/T))/2:
+                    matrix_i[l][k]=-1
+                if p<(1+numpy.tanh(h/T))/2:
+                    matrix_i[l][k]=1
+                if flips%L**2==0:
+                    matrix_c=matrix_i
+                    po=flips/L**2
+                    if flips!=0 and t==MS-1:
+                        x.append(po)
+                    lista=[]
+                    for i in range (LP):
+                        matrix_2=matrix_tot[i]
+                        m1=overlap(matrix_i,matrix_2)
+                        lista.append(m1)
+                    FI.append(lista)
+                flips+=1
+                delta_e=0
+            for l in range (LP):
+                listamf[l]+=FI[ni-1][l]
+            print(overlap(matrix_i,matrix_tot[0]))
+            M1tot+=overlap(matrix_i,matrix_tot[0])
+        print_matrix_simbolically(matrix_i)
+        print(J)
+        if q==1 and u==0:
+            matrixy=matrix_i
+        M1tot=M1tot/MS
+        listaM1.append(M1tot)
+
+
+    if q==1:
+        print("The order parameter q is %f" %overlap(matrixy,matrix_i))
+    for p in range (ni-1):
+        listamf[p]=listamf[p]/MS
+    for i in range (2):
+        print("The magnetization %f is %f" %(i,lista[i]))
+    print()
+    print(overlap(Ji,J))
+    end=time.time()
+    print()
+    print(end-start)
+    for j in range (0,LP):
+        lista=[]
+        for i in range (ni):
+            lista.append(FI[i][j])
+    x=numpy.zeros(SP,dtype=float)
+    for p in range (SP):
+        x[p]=p
+    plt.plot(listapt, listaM1,'ro')
+    plt.xlabel('MCS')
+    plt.ylabel('Magnetization')
+    plt.title('Patterns X Magnetization')
+    plt.show()
+                
+   
+def dreaming(eps,J,matrix):
+    N=len(J)
+    for i in range (N):
+        for j in range (i,N):
+            for k in range (N):
+                J[i][j]-=(eps*J[i][k]*J[k][j])/N
+
+    for i in range (1,N):
+        for j in range (i):
+            J[i][j]=J[j][i]
+    for k in range (N):
+        J[k][k]=0
+
+    return J
+
+def V(i,J,N,matrix):
+    V=0
+    for k in range (N):
+        up,ip=rerename_spins(k,matrix)
+        x=matrix[up][ip]*J[i][k]
+        V+=x
+
+        
+    return V
+
+
+
+    
+def print_matrix_simbolically(matrix):
+    n=len(matrix)
+    m=len(matrix[0])
+    for i in range(n):
+        for j in range(m):
+            if matrix[i][j]==-1:
+                matrix[i][j]="."
+                print("%3s" %matrix[i][j],end=" ")
+                matrix[i][j]=-1
+            if matrix[i][j]==1:
+                matrix[i][j]="O"
+                print("%3s" %matrix[i][j],end=" ")
+                matrix[i][j]=1
+        print()
+    print()
+
+def Hamming_distance(matrix1,matrix2):
+    L=len(matrix1)
+    d=0
+    for i in range (L):
+        for j in range (L):
+            d+=abs(matrix1[i][j]-matrix2[i][j])
+    d=d/(L**2)
+    return d
+
+
+def overlap(matrix1,matrix2):
+    m=0
+    L=len(matrix1)
+    for i in range (L):
+        for j in range (L):
+            m+=matrix1[i][j]*matrix2[i][j]
+    m=m/(L**2)
+    return m
+
+
+
+
+
+
+
+n=int(input("Type the number of flips: "))
+T=float(input("Type the temperature: "))
+L=int(input("Type the length of the patterns: "))
+LP=int(input("Type the number of patterns: "))
+a=int(input("Type the number of initial errors: "))
+MS=int(input("Type the number of mc steps: "))
+popi=int(input("Type the number of additional patterns per data: "))
+SP=int(input("Type the number of ammount of data: "))
+q=int(input("Do you want to calculate q?(1,0) "))
+D=int(input("Do you want to dream?(1,0) "))
+M=int(input("How much do you want to dream? "))
+eps=float(input("Type the value of epsilon: "))
+determine(a,n,T,L,LP,MS,SP,q,D,M,eps)
+
